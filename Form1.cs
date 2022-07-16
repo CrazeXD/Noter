@@ -1,5 +1,3 @@
-using IronPython;
-
 namespace Noter
 {
     public partial class Form1 : Form
@@ -15,6 +13,7 @@ namespace Noter
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "Text File|*.txt|All Files|*.*";
             saveFileDialog1.Title = "Save Your Notes";
+            saveFileDialog1.DefaultExt = "txt";
             saveFileDialog1.ShowDialog();
             var engine = IronPython.Hosting.Python.CreateEngine();
             var scope = engine.CreateScope();
@@ -29,7 +28,11 @@ def writefile(lines, filepath):
     return None
             ", scope);
             dynamic writer = scope.GetVariable("writefile");
-            writer(text, saveFileDialog1.FileName);
+            try
+            {
+                writer(text, saveFileDialog1.FileName);
+            }
+            catch { MessageBox.Show("Error, no file name given. File not saved."); }
         }
     }
 }
